@@ -117,6 +117,7 @@ async function showHomeTemplate() {
     if (typeof localUser === "string" && typeof localImg === "string") {
         loggedInUser = JSON.parse(localUser)
         userImg = JSON.parse(localImg)
+        
 
 
 
