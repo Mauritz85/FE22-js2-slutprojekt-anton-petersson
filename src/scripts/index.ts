@@ -1,5 +1,5 @@
 
-import { addEntryToFirebase, getStatusUpdates, entries, userImg, userValidated, getUserImg, userValidation, userAdded, addUserToFirebase, getMembers, members } from "../modules/firebase.ts";
+import { deleteUserFromFirebase, addEntryToFirebase, getStatusUpdates, entries, userImg, userValidated, getUserImg, userValidation, userAdded, addUserToFirebase, getMembers, members } from "../modules/firebase.ts";
 import duckImg from '../images/duck.jpg';
 import flowerImg from '../images/flower.jpg';
 import lemonImg from '../images/lemon.jpg';
@@ -53,6 +53,7 @@ async function registerUser(event) {
     else {
         alert('Username already exists')
     }
+    alert('You account was successfully created. Please log in to begin.')
 }
 
 //login
@@ -71,7 +72,6 @@ function showLoginTemplate() {
 
 
 }
-
 
 async function loginUser(event) {
     event.preventDefault()
@@ -140,6 +140,8 @@ async function showHomeTemplate() {
     homeLink.addEventListener('click', refresh)
     const memberLink = document.getElementById("member-link") as HTMLAnchorElement
     memberLink.addEventListener('click', showMembers)
+    const deleteLink = document.getElementById('delete-link') as HTMLButtonElement
+    deleteLink.addEventListener('click', deleteUser)
     const logoutLink = document.getElementById('logout-link') as HTMLButtonElement
     logoutLink.addEventListener('click', logout)
     showEntries(loggedInUser)
@@ -254,3 +256,18 @@ async function showMembers() {
         }
     }))
 }
+
+async function deleteUser() {
+    if (confirm('Are you sure you want to delete your account?')) {
+        if (loggedInUser) {
+            const sanitizedUsername = loggedInUser.replace(/^"(.*)"$/, '$1');
+            await deleteUserFromFirebase(sanitizedUsername);
+            alert('Your account is succesfully deleted')
+            localStorage.clear()
+            location.reload()
+        }
+    } else {
+        //do nothing
+    }
+}
+

@@ -1,7 +1,7 @@
 
 
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get, update, push } from "firebase/database";
+import { getDatabase, ref, get, update, push, remove } from "firebase/database";
 
 
 const firebaseConfig = {
@@ -121,9 +121,15 @@ async function getMembers() {
     const firebaseUsers = await get(ref(db, '/users/'))
     members = Object.entries(firebaseUsers.val())
 
+}
 
+async function deleteUserFromFirebase(username: string) {
+    try {
+        await remove(ref(db, '/users/' + username));
+        await remove(ref(db, '/statusUpdates/' + username));
+        console.log(`User ${username} has been successfully deleted.`);
+    } 
 }
 
 
-
-export { userValidation, userValidated, addUserToFirebase, userAdded, getStatusUpdates, entries, addEntryToFirebase, getUserImg, userImg, getMembers, members }
+export { deleteUserFromFirebase, userValidation, userValidated, addUserToFirebase, userAdded, getStatusUpdates, entries, addEntryToFirebase, getUserImg, userImg, getMembers, members }
